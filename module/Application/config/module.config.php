@@ -10,6 +10,9 @@
 namespace Application;
 
 return array(
+    'application' => array(
+        'name' => 'CoST',
+        'version' => '0.0.1'),
     'router' => array(
         'routes' => array(
             'home' => array(
