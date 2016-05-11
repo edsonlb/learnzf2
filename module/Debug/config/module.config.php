@@ -53,7 +53,19 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'factories' => array(
+        'aliases' => array(
+            'Debug\Timer' => 'timer',
+        ),
+        'abstract_factories' => array(
+            'Debug\Service\Factory\TimerAbstractFactory',
+        ),
+    ),
+    'timers' => array(
+        'timer' => array(
+            'times_as_float' => true,
+        ),
+        'timer_non_float' => array(
+            'times_as_float' => false,
         ),
     ),
     'controllers' => array(
