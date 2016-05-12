@@ -8,13 +8,13 @@ use Zend\ModuleManager\ModuleManager;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\EventManager\Event;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 class Module implements AutoloaderProviderInterface{
 
     public function init(ModuleManager $moduleManager){
         $eventManager = $moduleManager->getEventManager();
-        $eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, 
-            array($this, 'loadedModulesInfo'));
+        $eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'loadedModulesInfo'));
 
     }
 
@@ -30,8 +30,35 @@ class Module implements AutoloaderProviderInterface{
         $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this,'handleError'));
 
+        $serviceManager = $e->getApplication()->getServiceManager();
+
+        $timer = $serviceManager->get('timer');
+        $timer->start('mvc-execution');
+
+        $eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'getMvcDuration'),2);
+
+        $eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'addDebugOverlay',100));
         //$moduleRouteListener = new ModuleRouteListener();
         //$moduleRouteListener->attach($eventManager);
+    }
+
+    public function addDebugOverlay(MvcEvent $event){
+        $viewModel = $event->getViewModel();
+
+        $sidebarView = new ViewModel();
+        $sidebarView->setTemplate('debug/layout/sidebar');
+        $sidebarView->addChild($viewModel,'content');
+
+        $event->setViewModel($sidebarView);
+    }
+
+    public function getMvcDuration(MvcEvent $event){
+        $serviceManager = $event->getApplication()->getServiceManager();
+
+        $timer = $serviceManager->get('timer');
+        $duration = $timer->stop('mvc-execution');
+
+        error_log("MVC Duration: ".$duration." seconds...");
     }
 
     public function handleError(MvcEvent $event){
