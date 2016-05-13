@@ -11,7 +11,7 @@ class ControllerAbstractFactory implements AbstractFactoryInterface{
 		return class_exists($requestedName.'Controller');
 	}
 
-	public function createServicewithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName){
+	public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName){
 		$className = $requestedName.'Controller';
 		$instance = new $className();
 

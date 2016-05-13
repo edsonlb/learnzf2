@@ -27,17 +27,17 @@ class Module implements AutoloaderProviderInterface{
 
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager = $e->getApplication()->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this,'handleError'));
+        //$eventManager = $e->getApplication()->getEventManager();
+        //$eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this,'handleError'));
 
-        $serviceManager = $e->getApplication()->getServiceManager();
+        //$serviceManager = $e->getApplication()->getServiceManager();
 
-        $timer = $serviceManager->get('timer');
-        $timer->start('mvc-execution');
+        //$timer = $serviceManager->get('timer');
+        //$timer->start('mvc-execution');
 
-        $eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'getMvcDuration'),2);
+        //$eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'getMvcDuration'),2);
 
-        $eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'addDebugOverlay',100));
+        //$eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'addDebugOverlay',100));
         //$moduleRouteListener = new ModuleRouteListener();
         //$moduleRouteListener->attach($eventManager);
     }
